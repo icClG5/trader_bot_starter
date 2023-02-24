@@ -1,0 +1,27 @@
+{
+	"name": "binapi",
+	"version": "1.0.0",
+	"description": "Binance API implemented in C++ for both synchronous and asynchronous way.",
+	"main": "pm2.js",
+	"directories": {
+		"example": "examples"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/yzStrive/binapi-v1.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/yzStrive/binapi-v1/issues"
+	},
+	"homepage": "https://github.com/yzStrive/binapi-v1#readme",
+	"dependencies": {
+		"base64-js": "^1.5.1",
+		"crypto-js": "^4.1.1",
+		"pm2": "^5.2.2"
+	}
+}
