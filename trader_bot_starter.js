@@ -28,7 +28,7 @@ pm2.connect(function (err) {
 
       pm2.start(
         {
-          script: "./HFT",
+          script: "../HFT",
           name: process_name,
           //TODO: 参数执行确定
           args: "",
