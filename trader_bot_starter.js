@@ -50,7 +50,9 @@ pm2.connect(function (err) {
         if (!err) {
           console.log("stop success");
           //TODO: 成功后【关闭】 状态更新，如进程状态，账号余额/收益情况
-          pm2.stop(process_name);
+          pm2.stop("trader_bot_starter", function () {
+            process.exit(0);
+          });
         } else {
           console.error(err);
         }
