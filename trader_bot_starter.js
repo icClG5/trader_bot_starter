@@ -16,7 +16,6 @@ pm2.connect(function (err) {
   }
 
   const func = action && pm2[action];
-  console.log(func, "func");
   if (func) {
     if (action === "start") {
       // try {
@@ -35,6 +34,7 @@ pm2.connect(function (err) {
           name: process_name,
           //TODO: 参数执行确定
           // args: "",
+          cwd: path.resolve(currentFilePath, "../"),
         },
         function (err) {
           if (!err) {
