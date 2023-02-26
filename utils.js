@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 function parameterHandler(trader_bot_args, currentFilePath, process_name) {
   let execParams;
