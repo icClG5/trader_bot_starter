@@ -18,6 +18,7 @@ function parameterHandler(trader_bot_args, currentFilePath, process_name) {
     `../${process_name}_config.cfg`
   );
   execParams = JSON.stringify(trader_bot_args_transformed).replace(/"/g, '\\"');
+  console.log(execParams, "execParams");
   fs.writeFileSync(execPath, execParams, function (err, res) {
     if (err) {
       console.log(err);
