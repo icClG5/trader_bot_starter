@@ -4,13 +4,11 @@ const path = require("path");
 function parameterHandler(trader_bot_args, currentFilePath, process_name) {
   let execParams;
   let trader_bot_args_transformed = trader_bot_args
-    .split("\\")
-    .reduce((acc, line) => {
-      const [key, value] = line.split("=");
-      if (key) {
-        acc[key.trim()] = value.trim();
-      }
-      return acc;
+    .split("/")
+    .reduce((result, item) => {
+      const [key, value] = item.split("=");
+      result[key] = value;
+      return result;
     }, {});
 
   const execPath = path.resolve(
