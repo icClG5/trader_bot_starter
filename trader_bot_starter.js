@@ -33,7 +33,7 @@ pm2.connect(function (err) {
           if (!err) {
             console.log("start success");
             //TODO: 成功后【开启】状态更新，如进程状态，账号余额/收益情况
-            pm2StatusSync(ws_address, pm2_name);
+            pm2StatusSync(ws_address, process_name);
           } else {
             errorHandle(err);
           }
@@ -46,7 +46,7 @@ pm2.connect(function (err) {
           //TODO: 成功后【关闭】 状态更新，如进程状态，账号余额/收益情况
           if (ws && ws.close) {
             clearWs();
-            pm2StatusSync(ws_address);
+            pm2StatusSync(ws_address, process_name);
           }
           pm2.stop("trader_bot_starter", function (err) {
             if (err) {
