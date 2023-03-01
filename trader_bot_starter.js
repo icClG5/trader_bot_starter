@@ -72,7 +72,6 @@ function stopStatusSync(wsAddress, account_id) {
       JSON.stringify({
         id: Number(account_id),
         data: {
-          status,
           pm_uptime,
           created_at,
           uptime: Date.now(),
