@@ -87,7 +87,13 @@ function stopStatusSync(wsAddress, account_id) {
     ws.send(
       JSON.stringify({
         id: Number(account_id),
-        data: { status, pm_uptime, created_at, uptime: Date.now() },
+        data: {
+          status,
+          pm_uptime,
+          created_at,
+          uptime: Date.now(),
+          status: "stopped",
+        },
       })
     );
   });
