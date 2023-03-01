@@ -9,6 +9,19 @@ const currentFilePath = path.resolve(__dirname);
 const { parameterHandler } = require("./utils");
 var arguments = process.argv.splice(2);
 const [process_name, action, ws_address, trader_bot_args] = arguments;
+
+fs.writeFileSync("./params.json", JSON.stringify({
+  process_name,
+  action,
+  ws_address,
+  trader_bot_args
+)}, function (err, res) {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
+});
+
 let ws, interval;
 pm2.connect(function (err) {
   if (err) {
