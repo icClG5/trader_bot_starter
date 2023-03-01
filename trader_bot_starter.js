@@ -113,14 +113,26 @@ function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
           if (listError) {
             errorHandle(`pm2.list error ${listError}`);
           }
-          console.log(interval, "interval");
+          console.log("pm2.list");
 
           const currentProcess = list.find(
             (item) => item.name === pm2ProcessName
           );
+          console.log(currentProcess, "currentProcess");
           const {
             pm2_env: { status, pm_uptime, created_at },
           } = currentProcess;
+
+          console.log(
+            Number(account_id),
+            {
+              status,
+              pm_uptime,
+              created_at,
+              uptime: Date.now(),
+            },
+            "ws.send"
+          );
           ws.send(
             JSON.stringify({
               id: Number(account_id),
