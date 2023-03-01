@@ -66,7 +66,7 @@ pm2.connect(function (err) {
 
 function pm2StatusSync(wsAddress, pm2ProcessName) {
   clearWs();
-  ws = new WebSocket(api_host);
+  ws = new WebSocket(wsAddress);
   ws.on("open", function open() {
     pm2.connect(function (err) {
       if (err) {
