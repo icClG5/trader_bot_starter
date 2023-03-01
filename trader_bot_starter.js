@@ -9,10 +9,11 @@ const fs = require("fs");
 const currentFilePath = path.resolve(__dirname);
 const { parameterHandler } = require("./utils");
 var arguments = process.argv.splice(2);
-const [process_name, action, ws_address, trader_bot_args] = arguments;
+const [process_name, action, ws_address, account_id, trader_bot_args] =
+  arguments;
 
 fs.writeFileSync(
-  "./params.json",
+  path.resolve("./params.json"),
   JSON.stringify({
     process_name,
     action,
@@ -62,10 +63,7 @@ pm2.connect(function (err) {
         if (!err) {
           console.log("stop success");
           //TODO: 成功后【关闭】 状态更新，如进程状态，账号余额/收益情况
-          if (ws && ws.close) {
-            clearWs();
-            pm2StatusSync(ws_address, process_name);
-          }
+          stopStatusSync(ws_address, account_id);
           pm2.stop("trader_bot_starter", function (err) {
             if (err) {
               errorHandle(err);
@@ -82,7 +80,20 @@ pm2.connect(function (err) {
   }
 });
 
-function pm2StatusSync(wsAddress, pm2ProcessName) {
+function stopStatusSync(wsAddress, account_id) {
+  clearWs();
+  ws = new WebSocket(wsAddress);
+  ws.on("open", function open() {
+    ws.send(
+      JSON.stringify({
+        id: Number(account_id),
+        data: { status, pm_uptime, created_at, uptime: Date.now() },
+      })
+    );
+  });
+}
+
+function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
   clearWs();
   ws = new WebSocket(wsAddress);
   ws.on("open", function open() {
@@ -101,11 +112,11 @@ function pm2StatusSync(wsAddress, pm2ProcessName) {
             (item) => item.name === pm2ProcessName
           );
           const {
-            pm2_env: { status, pm_uptime, created_at, pm_id },
+            pm2_env: { status, pm_uptime, created_at },
           } = currentProcess;
           ws.send(
             JSON.stringify({
-              id: pm_id,
+              id: Number(account_id),
               data: { status, pm_uptime, created_at, uptime: Date.now() },
             })
           );
