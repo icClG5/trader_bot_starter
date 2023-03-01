@@ -66,8 +66,10 @@ pm2.connect(function (err) {
 
 function stopStatusSync(wsAddress, account_id) {
   clearWs();
+  console.log(wsAddress, account_id, "stopStatusSync enter");
   ws = new WebSocket(wsAddress);
   ws.on("open", function open() {
+    console.log("ws open");
     ws.send(
       JSON.stringify({
         id: Number(account_id),
