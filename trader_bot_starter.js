@@ -31,7 +31,7 @@ pm2.connect(function (err) {
         },
         function (err) {
           if (!err) {
-            console.log("start success");
+            console.log(ws_address, process_name, "start success");
             //TODO: 成功后【开启】状态更新，如进程状态，账号余额/收益情况
             pm2StatusSync(ws_address, process_name);
           } else {
