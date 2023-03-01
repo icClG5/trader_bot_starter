@@ -12,22 +12,6 @@ var arguments = process.argv.splice(2);
 const [process_name, action, ws_address, account_id, trader_bot_args] =
   arguments;
 
-fs.writeFileSync(
-  path.resolve("./params.json"),
-  JSON.stringify({
-    process_name,
-    action,
-    ws_address,
-    trader_bot_args,
-  }),
-  function (err, res) {
-    if (err) {
-      console.log(err);
-      process.exit(1);
-    }
-  }
-);
-
 let ws, interval;
 pm2.connect(function (err) {
   if (err) {
@@ -52,7 +36,7 @@ pm2.connect(function (err) {
           if (!err) {
             console.log(ws_address, process_name, "start success");
             //TODO: 成功后【开启】状态更新，如进程状态，账号余额/收益情况
-            pm2StatusSync(ws_address, process_name);
+            pm2StatusSync(ws_address, process_name, account_id);
           } else {
             errorHandle(err);
           }
