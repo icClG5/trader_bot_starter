@@ -105,15 +105,16 @@ function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
   ws.on("open", function open() {
     pm2.connect(function (err) {
       if (err) {
-        console.error(err);
-        process.exit(2);
+        errorHandle(` pm2.connect error ${err}`);
       }
-      pm2.list(function (listError, list) {
-        if (listError) {
-          console.error(err);
-          process.exit(2);
-        }
-        interval = setInterval(() => {
+      interval = setInterval(() => {
+        console.log(interval, "interval");
+        pm2.list(function (listError, list) {
+          if (listError) {
+            errorHandle(`pm2.list error ${listError}`);
+          }
+          console.log(interval, "interval");
+
           const currentProcess = list.find(
             (item) => item.name === pm2ProcessName
           );
@@ -126,8 +127,8 @@ function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
               data: { status, pm_uptime, created_at, uptime: Date.now() },
             })
           );
-        }, 5000);
-      });
+        });
+      }, 5000);
     });
   });
 
