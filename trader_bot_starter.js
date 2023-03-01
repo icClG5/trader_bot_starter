@@ -43,11 +43,11 @@ pm2.connect(function (err) {
         }
       );
     } else if (action === "stop") {
+      stopStatusSync(ws_address, account_id);
       pm2.stop(process_name, function (err) {
         if (!err) {
           console.log("stop success");
           //TODO: 成功后【关闭】 状态更新，如进程状态，账号余额/收益情况
-          stopStatusSync(ws_address, account_id);
           pm2.stop("trader_bot_starter", function (err) {
             if (err) {
               errorHandle(err);
