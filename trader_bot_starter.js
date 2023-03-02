@@ -28,7 +28,7 @@ pm2.connect(function (err) {
       );
       pm2.start(
         {
-          script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
+          script: path.resolve(currentFilePath, `../HFT -c '${execParams}'`),
           name: process_name,
           cwd: path.resolve(currentFilePath, "../"),
         },
