@@ -28,7 +28,7 @@ pm2.connect(function (err) {
       );
       pm2.start(
         {
-          script: path.resolve(currentFilePath, `../HFT -c '${execParams}'`),
+          script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
           name: process_name,
           cwd: path.resolve(currentFilePath, "../"),
         },
@@ -98,26 +98,12 @@ function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
           if (listError) {
             errorHandle(`pm2.list error ${listError}`);
           }
-          console.log("pm2.list");
-
           const currentProcess = list.find(
             (item) => item.name === pm2ProcessName
           );
-          console.log(currentProcess, "currentProcess");
           const {
             pm2_env: { status, pm_uptime, created_at },
           } = currentProcess;
-
-          console.log(
-            Number(account_id),
-            {
-              status,
-              pm_uptime,
-              created_at,
-              uptime: Date.now(),
-            },
-            "ws.send"
-          );
           ws.send(
             JSON.stringify({
               id: Number(account_id),
