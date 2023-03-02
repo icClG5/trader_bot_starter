@@ -5,7 +5,6 @@ const crypto = require("crypto");
 const path = require("path");
 const WebSocket = require("ws");
 const fs = require("fs");
-const logger = require("pino")();
 
 const currentFilePath = path.resolve(__dirname);
 const { parameterHandler } = require("./utils");
@@ -27,15 +26,7 @@ pm2.connect(function (err) {
         currentFilePath,
         process_name
       );
-      try {
-        logger.info(
-          execParams,
-          JSON.parse(`'${execParams}'`),
-          "JSON.parse execParams"
-        );
-      } catch (e) {
-        logger.info(e, "JSON.parse error");
-      }
+
       pm2.start(
         {
           script: path.resolve(currentFilePath, `../HFT -c '${execParams}'`),
@@ -46,7 +37,7 @@ pm2.connect(function (err) {
           if (!err) {
             //TODO: 成功后【开启】状态更新，如进程状态，账号余额/收益情况
             pm2.list(function (e, list) {
-              logger.info(list, "list");
+              console.log(list, "list");
             });
             pm2StatusSync(ws_address, process_name, account_id);
           } else {
@@ -58,7 +49,7 @@ pm2.connect(function (err) {
       stopStatusSync(ws_address, account_id);
       pm2.stop(process_name, function (err) {
         if (!err) {
-          logger.info("stop success");
+          console.log("stop success");
           //TODO: 成功后【关闭】 状态更新，如进程状态，账号余额/收益情况
           pm2.stop("trader_bot_starter", function (err) {
             if (err) {
@@ -78,10 +69,8 @@ pm2.connect(function (err) {
 
 function stopStatusSync(wsAddress, account_id) {
   clearWs();
-  logger.info(wsAddress, account_id, "stopStatusSync enter");
   ws = new WebSocket(wsAddress);
   ws.on("open", function open() {
-    logger.info("ws open");
     ws.send(
       JSON.stringify({
         id: Number(account_id),
@@ -127,7 +116,7 @@ function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
   });
 
   ws.on("close", () => {
-    logger.info("ws close");
+    console.log("ws close");
     clearInterval(interval);
   });
 }
