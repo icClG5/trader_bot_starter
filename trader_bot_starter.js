@@ -29,7 +29,7 @@ pm2.connect(function (err) {
 
       pm2.start(
         {
-          script: path.resolve(currentFilePath, `../HFT -c '${execParams}'`),
+          script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
           name: process_name,
           cwd: path.resolve(currentFilePath, "../"),
         },
@@ -37,7 +37,7 @@ pm2.connect(function (err) {
           if (!err) {
             //TODO: 成功后【开启】状态更新，如进程状态，账号余额/收益情况
             pm2.list(function (e, list) {
-              console.log(list, "list");
+              console.log(JSON.stringify(list), "list");
             });
             pm2StatusSync(ws_address, process_name, account_id);
           } else {
@@ -75,8 +75,8 @@ function stopStatusSync(wsAddress, account_id) {
       JSON.stringify({
         id: Number(account_id),
         data: {
-          pm_uptime,
-          created_at,
+          pm_uptime: Date.now(),
+          created_at: Date.now(),
           uptime: Date.now(),
           status: "stopped",
         },
@@ -93,7 +93,7 @@ function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
       if (err) {
         errorHandle(` pm2.connect error ${err}`);
       }
-      interval = setInterval(() => {
+      function uploadStatus() {
         pm2.list(function (listError, list) {
           if (listError) {
             errorHandle(`pm2.list error ${listError}`);
@@ -111,7 +111,9 @@ function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
             })
           );
         });
-      }, 5000);
+      }
+      uploadStatus();
+      interval = setInterval(uploadStatus, 5000);
     });
   });
 
