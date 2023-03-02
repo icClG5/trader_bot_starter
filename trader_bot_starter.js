@@ -102,7 +102,6 @@ function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
         errorHandle(` pm2.connect error ${err}`);
       }
       interval = setInterval(() => {
-        console.log(interval, "interval");
         pm2.list(function (listError, list) {
           if (listError) {
             errorHandle(`pm2.list error ${listError}`);
