@@ -26,9 +26,16 @@ pm2.connect(function (err) {
         currentFilePath,
         process_name
       );
+      try {
+        console.log(
+          execParams,
+          JSON.parse(`'${execParams}'`),
+          "JSON.parse execParams"
+        );
+      } catch (e) {}
       pm2.start(
         {
-          script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
+          script: path.resolve(currentFilePath, `../HFT -c '${execParams}'`),
           name: process_name,
           cwd: path.resolve(currentFilePath, "../"),
         },
