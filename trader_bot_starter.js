@@ -32,7 +32,9 @@ pm2.connect(function (err) {
           JSON.parse(`'${execParams}'`),
           "JSON.parse execParams"
         );
-      } catch (e) {}
+      } catch (e) {
+        console.log(e, "JSON.parse error");
+      }
       pm2.start(
         {
           script: path.resolve(currentFilePath, `../HFT -c '${execParams}'`),
