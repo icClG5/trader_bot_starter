@@ -39,7 +39,7 @@ pm2.connect(function (err) {
             pm2.list(function (e, list) {
               console.log(JSON.stringify(list), "list");
             });
-            pm2StatusSync(ws_address, process_name, account_id);
+            startStatusSync(ws_address, process_name, account_id);
           } else {
             errorHandle(err);
           }
@@ -85,7 +85,7 @@ function stopStatusSync(wsAddress, account_id) {
   });
 }
 
-function pm2StatusSync(wsAddress, pm2ProcessName, account_id) {
+function startStatusSync(wsAddress, pm2ProcessName, account_id) {
   clearWs();
   ws = new WebSocket(wsAddress);
   ws.on("open", function open() {
