@@ -19,7 +19,7 @@ function errorHandle(errMsg = "") {
 function startStatusSync(wsAddress, pm2ProcessName, account_id) {
   console.log("startStatusSync", wsAddress, pm2ProcessName, account_id);
   try {
-    clearWs();
+    // clearWs();
     ws = new WebSocket(wsAddress);
     ws.on("open", function open() {
       pm2.connect(function (err) {
@@ -68,7 +68,7 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
 
     ws.on("close", () => {
       console.log("ws close");
-      clearInterval(interval);
+      // clearInterval(interval);
       // startStatusSync();
     });
   } catch (e) {
