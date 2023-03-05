@@ -26,6 +26,9 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
           errorHandle(` pm2.connect error ${err}`);
         }
         function uploadStatus() {
+          console.log(
+            `======= account_id:${account_id} start sync status ======`
+          );
           pm2.list(function (listError, list) {
             if (listError) {
               errorHandle(`pm2.list error ${listError}`);
@@ -68,7 +71,7 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
     ws.on("close", () => {
       console.log("ws close");
       clearInterval(interval);
-      startStatusSync();
+      // startStatusSync();
     });
   } catch (e) {
     process.exit(1);

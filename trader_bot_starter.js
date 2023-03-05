@@ -30,6 +30,7 @@ pm2.connect(function (err) {
           errorHandle(`pm2.list error ${listError}`);
         }
         const currentProcess = list.find((item) => item.name === process_name);
+        console.log(currentProcess, "currentProcess");
         if (currentProcess) {
           pm2.restart(process_name);
         } else {
@@ -43,6 +44,7 @@ pm2.connect(function (err) {
               cwd: path.resolve(currentFilePath, "../"),
             },
             function (err) {
+              console.log(err, "pm2.start error");
               if (!err) {
                 pm2.start({
                   script: path.resolve(
