@@ -58,6 +58,7 @@ pm2.connect(function (err) {
             }
           });
         } else {
+          console.log(`====== stop error: ${err} ======`);
           errorHandle(err);
         }
       });
