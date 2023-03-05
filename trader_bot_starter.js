@@ -86,7 +86,7 @@ function startSyncStatus(sync_status_bot_name) {
 
 function stopStatusSync(wsAddress, account_id) {
   clearWs();
-  ws = new WebSocket(wsAddress);
+  const ws = new WebSocket(wsAddress);
   console.log("====== enter inner stop ======");
   ws.on("open", function open() {
     console.log(
@@ -107,6 +107,7 @@ function stopStatusSync(wsAddress, account_id) {
           console.log(
             `======= account_id:${account_id} stop sync status success ======`
           );
+          ws.close();
           clearWs();
         }
       }
