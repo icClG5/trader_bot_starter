@@ -60,14 +60,13 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
           });
         }
         uploadStatus();
-        interval = setInterval(uploadStatus, 5000);
+        interval = setInterval(uploadStatus, 5 * 1000 * 60);
       });
     });
 
     ws.on("close", () => {
       console.log(interval, "ws close");
       clearInterval(interval);
-      // startStatusSync();
     });
   } catch (e) {
     console.log(e, "error catch");
@@ -75,9 +74,4 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
   }
 }
 
-(function () {
-  setInterval(() => {
-    console.log("setInterval");
-  }, 1000);
-})();
 startStatusSync(wsAddress, pm2ProcessName, account_id);
