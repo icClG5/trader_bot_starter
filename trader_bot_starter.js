@@ -1,16 +1,13 @@
 const pm2 = require("pm2");
 const process = require("process");
-const CryptoJS = require("crypto-js");
-const crypto = require("crypto");
 const path = require("path");
 const WebSocket = require("ws");
-const fs = require("fs");
 
 const currentFilePath = path.resolve(__dirname);
 const { parameterHandler } = require("./utils");
-var arguments = process.argv.splice(2);
+// eslint-disable-next-line no-shadow-restricted-names
 const [process_name, action, ws_address, account_id, trader_bot_args] =
-  arguments;
+  process.argv.splice(2);
 
 let ws, interval;
 pm2.connect(function (err) {
@@ -19,6 +16,7 @@ pm2.connect(function (err) {
   }
   const func = action && pm2[action];
   if (func) {
+    const sync_status_bot_name = `${process_name}_async_status_bot`;
     if (action === "start") {
       // parameter handler
       const execParams = parameterHandler(
@@ -27,38 +25,51 @@ pm2.connect(function (err) {
         process_name
       );
 
-      pm2.start(
-        {
-          script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
-          name: process_name,
-          cwd: path.resolve(currentFilePath, "../"),
-        },
-        function (err) {
-          if (!err) {
-            //TODO: 成功后【开启】状态更新，如进程状态，账号余额/收益情况
-            pm2.list(function (e, list) {
-              console.log(JSON.stringify(list), "list");
-            });
-            startStatusSync(ws_address, process_name, account_id);
-          } else {
-            errorHandle(err);
-          }
+      pm2.list(function (listError, list) {
+        if (listError) {
+          errorHandle(`pm2.list error ${listError}`);
         }
-      );
+        const currentProcess = list.find((item) => item.name === process_name);
+        if (currentProcess) {
+          pm2.restart(process_name);
+        } else {
+          pm2.start(
+            {
+              script: path.resolve(
+                currentFilePath,
+                `../HFT -c "${execParams}"`
+              ),
+              name: process_name,
+              cwd: path.resolve(currentFilePath, "../"),
+            },
+            function (err) {
+              if (!err) {
+                pm2.start({
+                  script: path.resolve(
+                    `./sync_status_bot.js ${ws_address} ${process_name} ${account_id}`
+                  ),
+                  name: sync_status_bot_name,
+                });
+                process.exit(0);
+              } else {
+                errorHandle(err);
+              }
+            }
+          );
+        }
+      });
     } else if (action === "stop") {
-      stopStatusSync(ws_address, account_id);
       pm2.stop(process_name, function (err) {
         if (!err) {
-          console.log("stop success");
-          //TODO: 成功后【关闭】 状态更新，如进程状态，账号余额/收益情况
-          pm2.stop("trader_bot_starter", function (err) {
-            if (err) {
-              errorHandle(err);
-            } else {
-              clearWs();
-              process.exit(0);
-            }
-          });
+          stopStatusSync(ws_address, account_id);
+          process.exit(0);
+        } else {
+          errorHandle(err);
+        }
+      });
+      pm2.stop(sync_status_bot_name, function (err) {
+        if (!err) {
+          process.exit(0);
         } else {
           errorHandle(err);
         }
@@ -69,7 +80,7 @@ pm2.connect(function (err) {
 
 function stopStatusSync(wsAddress, account_id) {
   clearWs();
-  ws = new WebSocket(wsAddress);
+  const ws = new WebSocket(wsAddress);
   ws.on("open", function open() {
     ws.send(
       JSON.stringify({
@@ -80,46 +91,13 @@ function stopStatusSync(wsAddress, account_id) {
           uptime: Date.now(),
           status: "stopped",
         },
-      })
+      }),
+      (err) => {
+        if (!err) {
+          clearWs();
+        }
+      }
     );
-  });
-}
-
-function startStatusSync(wsAddress, pm2ProcessName, account_id) {
-  clearWs();
-  ws = new WebSocket(wsAddress);
-  ws.on("open", function open() {
-    pm2.connect(function (err) {
-      if (err) {
-        errorHandle(` pm2.connect error ${err}`);
-      }
-      function uploadStatus() {
-        pm2.list(function (listError, list) {
-          if (listError) {
-            errorHandle(`pm2.list error ${listError}`);
-          }
-          const currentProcess = list.find(
-            (item) => item.name === pm2ProcessName
-          );
-          const {
-            pm2_env: { status, pm_uptime, created_at },
-          } = currentProcess;
-          ws.send(
-            JSON.stringify({
-              id: Number(account_id),
-              data: { status, pm_uptime, created_at, uptime: Date.now() },
-            })
-          );
-        });
-      }
-      uploadStatus();
-      interval = setInterval(uploadStatus, 1000 * 60 * 5);
-    });
-  });
-
-  ws.on("close", () => {
-    console.log("ws close");
-    clearInterval(interval);
   });
 }
 
