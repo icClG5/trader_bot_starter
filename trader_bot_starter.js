@@ -67,7 +67,7 @@ function startSyncStatus(sync_status_bot_name) {
   console.log(startSyncStatus, "startSyncStatus");
   pm2.start(
     {
-      script: path.resolve("./sync_status_bot.js"),
+      script: path.resolve(currentFilePath, "./sync_status_bot.js"),
       name: sync_status_bot_name,
       args: [ws_address, process_name, account_id],
       cwd: path.resolve(currentFilePath),
