@@ -34,40 +34,13 @@ pm2.connect(function (err) {
         if (currentProcess) {
           pm2.restart(process_name);
         } else {
-          pm2.start(
-            {
-              script: path.resolve(
-                currentFilePath,
-                `../HFT -c "${execParams}"`
-              ),
-              name: process_name,
-              cwd: path.resolve(currentFilePath, "../"),
-            },
-            function (err) {
-              console.log(err, "pm2.start error");
-              if (!err) {
-                pm2.start(
-                  {
-                    script: path.resolve(
-                      `./sync_status_bot.js ${ws_address} ${process_name} ${account_id}`
-                    ),
-                    name: sync_status_bot_name,
-                  },
-                  function (err) {
-                    if (!err) {
-                      process.exit(0);
-                    } else {
-                      errorHandle(err);
-                    }
-                  }
-                );
-                process.exit(0);
-              } else {
-                errorHandle(err);
-              }
-            }
-          );
+          pm2.start({
+            script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
+            name: process_name,
+            cwd: path.resolve(currentFilePath, "../"),
+          });
         }
+        startSyncStatus(process_name);
       });
     } else if (action === "stop") {
       pm2.stop(process_name, function (err) {
@@ -85,9 +58,29 @@ pm2.connect(function (err) {
           errorHandle(err);
         }
       });
+      process.exit(0);
     }
   }
 });
+
+function startSyncStatus(sync_status_bot_name) {
+  pm2.start(
+    {
+      script: path.resolve(
+        `./sync_status_bot.js ${ws_address} ${process_name} ${account_id}`
+      ),
+      name: sync_status_bot_name,
+    },
+    function (err) {
+      if (!err) {
+        process.exit(0);
+      } else {
+        errorHandle(err);
+      }
+    }
+  );
+  process.exit(0);
+}
 
 function stopStatusSync(wsAddress, account_id) {
   clearWs();
