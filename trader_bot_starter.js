@@ -32,16 +32,15 @@ pm2.connect(function (err) {
         const currentProcess = list.find((item) => item.name === process_name);
         console.log(currentProcess, "currentProcess");
         if (currentProcess) {
-          pm2.restart(process_name);
-          pm2.restart(sync_status_bot_name);
-        } else {
-          pm2.start({
-            script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
-            name: process_name,
-            cwd: path.resolve(currentFilePath, "../"),
-          });
-          startSyncStatus(sync_status_bot_name);
+          pm2.stop(process_name);
+          pm2.stop(sync_status_bot_name);
         }
+        pm2.start({
+          script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
+          name: process_name,
+          cwd: path.resolve(currentFilePath, "../"),
+        });
+        startSyncStatus(sync_status_bot_name);
       });
     } else if (action === "stop") {
       pm2.stop(process_name, function (err) {
