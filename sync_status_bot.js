@@ -67,11 +67,12 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
     });
 
     ws.on("close", () => {
-      console.log("ws close");
+      console.log(interval, "ws close");
       // clearInterval(interval);
       // startStatusSync();
     });
   } catch (e) {
+    console.log(e, "ws close");
     process.exit(1);
   }
 }
