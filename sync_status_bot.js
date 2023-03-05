@@ -20,7 +20,7 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
   console.log("startStatusSync", wsAddress, pm2ProcessName, account_id);
   try {
     // clearWs();
-    ws = new WebSocket(wsAddress);
+    const ws = new WebSocket(wsAddress);
     ws.on("open", function open() {
       pm2.connect(function (err) {
         if (err) {
@@ -62,7 +62,7 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
           });
         }
         uploadStatus();
-        interval = setInterval(uploadStatus, 5);
+        interval = setInterval(uploadStatus, 5000);
       });
     });
 
