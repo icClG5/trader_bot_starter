@@ -40,7 +40,7 @@ pm2.connect(function (err) {
             cwd: path.resolve(currentFilePath, "../"),
           });
         }
-        startSyncStatus(process_name);
+        startSyncStatus(sync_status_bot_name);
       });
     } else if (action === "stop") {
       pm2.stop(process_name, function (err) {
