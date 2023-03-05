@@ -64,6 +64,7 @@ pm2.connect(function (err) {
 });
 
 function startSyncStatus(sync_status_bot_name) {
+  console.log(startSyncStatus, "startSyncStatus");
   pm2.start(
     {
       script: path.resolve(
