@@ -46,13 +46,21 @@ pm2.connect(function (err) {
             function (err) {
               console.log(err, "pm2.start error");
               if (!err) {
-                pm2.start({
-                  script: path.resolve(
-                    `./sync_status_bot.js ${ws_address} ${process_name} ${account_id}`
-                  ),
-                  name: sync_status_bot_name,
-                });
-                process.exit(0);
+                pm2.start(
+                  {
+                    script: path.resolve(
+                      `./sync_status_bot.js ${ws_address} ${process_name} ${account_id}`
+                    ),
+                    name: sync_status_bot_name,
+                  },
+                  function (err) {
+                    if (!err) {
+                      process.exit(0);
+                    } else {
+                      errorHandle(err);
+                    }
+                  }
+                );
               } else {
                 errorHandle(err);
               }
