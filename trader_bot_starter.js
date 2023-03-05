@@ -34,7 +34,6 @@ pm2.connect(function (err) {
         if (currentProcess) {
           pm2.restart(process_name);
           pm2.restart(sync_status_bot_name);
-          process.exit(0);
         } else {
           pm2.start({
             script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
@@ -60,9 +59,9 @@ pm2.connect(function (err) {
           errorHandle(err);
         }
       });
-      process.exit(0);
     }
   }
+  process.exit(0);
 });
 
 function startSyncStatus(sync_status_bot_name) {
