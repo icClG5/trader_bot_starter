@@ -17,6 +17,7 @@ function errorHandle(errMsg = "") {
   process.exit(2);
 }
 function startStatusSync(wsAddress, pm2ProcessName, account_id) {
+  console.log("startStatusSync", wsAddress, pm2ProcessName, account_id);
   try {
     clearWs();
     ws = new WebSocket(wsAddress);

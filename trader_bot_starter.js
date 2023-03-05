@@ -67,20 +67,19 @@ function startSyncStatus(sync_status_bot_name) {
   console.log(startSyncStatus, "startSyncStatus");
   pm2.start(
     {
-      script: path.resolve(
-        `./sync_status_bot.js ${ws_address} ${process_name} ${account_id}`
-      ),
+      script: path.resolve("./sync_status_bot.js"),
       name: sync_status_bot_name,
+      args: [ws_address, process_name, account_id],
+      cwd: path.resolve(currentFilePath),
     },
-    function (err) {
+    function (err, apps) {
+      console.log(err, apps);
       if (!err) {
         process.exit(0);
-      } else {
-        errorHandle(err);
       }
+      process.exit(1);
     }
   );
-  process.exit(0);
 }
 
 function stopStatusSync(wsAddress, account_id) {
