@@ -40,9 +40,6 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
             const {
               pm2_env: { status, pm_uptime, created_at },
             } = currentProcess;
-            console.log(
-              `======= account_id:${account_id} start sync status ======`
-            );
             ws.send(
               JSON.stringify(
                 {
@@ -52,11 +49,11 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
                 function (err) {
                   if (err) {
                     console.error(
-                      `======= account_id:${account_id} start sync fail ======`
+                      `======= account_id:${account_id}  start sync fail ======`
                     );
                   } else {
                     console.log(
-                      `======= account_id:${account_id} start sync success !!! ======`
+                      `======= account_id:${account_id} start sync  ${status}  success !!! ======`
                     );
                   }
                 }
@@ -79,4 +76,9 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
   }
 }
 
+(function () {
+  setInterval(() => {
+    console.log("setInterval");
+  }, 1000);
+})();
 startStatusSync(wsAddress, pm2ProcessName, account_id);
