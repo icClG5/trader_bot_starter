@@ -61,6 +61,7 @@ pm2.connect(function (err) {
                     }
                   }
                 );
+                process.exit(0);
               } else {
                 errorHandle(err);
               }
