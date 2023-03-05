@@ -62,7 +62,7 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
           });
         }
         uploadStatus();
-        interval = setInterval(uploadStatus, 1000 * 60 * 5);
+        interval = setInterval(uploadStatus, 5);
       });
     });
 
