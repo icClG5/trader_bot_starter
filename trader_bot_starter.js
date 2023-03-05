@@ -85,7 +85,7 @@ function startSyncStatus(sync_status_bot_name) {
 
 function stopStatusSync(wsAddress, account_id) {
   clearWs();
-  ws = new WebSocket(wsAddress);
+  const ws = new WebSocket(wsAddress);
   ws.on("open", function open() {
     ws.send(
       JSON.stringify({
