@@ -77,8 +77,7 @@ function startSyncStatus(sync_status_bot_name) {
       args: [ws_address, process_name, account_id],
       cwd: path.resolve(currentFilePath),
     },
-    function (err, apps) {
-      console.log(err, apps);
+    function (err) {
       if (!err) {
         process.exit(0);
       }
