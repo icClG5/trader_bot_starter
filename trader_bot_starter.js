@@ -16,7 +16,7 @@ pm2.connect(function (err) {
   }
   const func = action && pm2[action];
   if (func) {
-    const sync_status_bot_name = `${process_name}_async_status_bot`;
+    const sync_status_bot_name = `${process_name}_sync_status_bot`;
     if (action === "start") {
       // parameter handler
       const execParams = parameterHandler(
