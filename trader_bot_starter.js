@@ -48,19 +48,19 @@ pm2.connect(function (err) {
       pm2.stop(process_name, function (err) {
         if (!err) {
           stopStatusSync(ws_address, account_id);
-          pm2.stop(sync_status_bot_name, function (err) {
-            if (!err) {
-              stopStatusSync(ws_address, account_id);
-              // process.exit(0);
-            } else {
-              stopStatusSync(ws_address, account_id);
-              // process.exit(1);
-              // errorHandle(err);
-            }
-          });
         } else {
           stopStatusSync(ws_address, account_id);
           console.log(`====== stop error: ${err} ======`);
+          // errorHandle(err);
+        }
+      });
+      pm2.stop(sync_status_bot_name, function (err) {
+        if (!err) {
+          stopStatusSync(ws_address, account_id);
+          // process.exit(0);
+        } else {
+          stopStatusSync(ws_address, account_id);
+          // process.exit(1);
           // errorHandle(err);
         }
       });
