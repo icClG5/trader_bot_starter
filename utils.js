@@ -47,13 +47,22 @@ function clearPosition(param_str) {
     .map(([key, value]) => `${key} = "${value}"`)
     .join("\n");
 
-  fs.writeFileSync("config.toml", keyValueStr);
+  fs.writeFileSync(
+    path.resolve(currentFilePath, "../clean_position/config.toml"),
+    keyValueStr
+  );
 
-  const pythonProcess = spawn("python3", [
-    path.resolve(currentFilePath, "../clean_position/run_quit.py"),
-    "-c",
-    "config.toml",
-  ]);
+  const pythonProcess = spawn(
+    "python3",
+    [
+      path.resolve(currentFilePath, "../clean_position/run_quit.py"),
+      "-c",
+      "config.toml",
+    ],
+    {
+      cwd: path.resolve(currentFilePath, "../clean_position"),
+    }
+  );
 
   process.exit(0);
 
