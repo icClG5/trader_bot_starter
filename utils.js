@@ -50,11 +50,12 @@ function clearPosition(param_str) {
   fs.writeFileSync("config.toml", keyValueStr);
 
   const pythonProcess = spawn("python3", [
-    path.resolve(
-      currentFilePath,
-      "../clean_position/run_qun.py -c config.toml"
-    ),
+    path.resolve(currentFilePath, "../clean_position/run_quit.py"),
+    "-c",
+    "config.toml",
   ]);
+
+  process.exit(0);
 
   pythonProcess.stdout.on("data", (data) => {
     console.log(`Python script output: ${data}`);
