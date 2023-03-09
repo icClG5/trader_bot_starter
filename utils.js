@@ -64,8 +64,6 @@ function clearPosition(param_str) {
     }
   );
 
-  process.exit(0);
-
   pythonProcess.stdout.on("data", (data) => {
     console.log(`Python script output: ${data}`);
     process.exit(0);
