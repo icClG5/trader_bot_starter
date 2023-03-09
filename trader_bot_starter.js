@@ -4,7 +4,7 @@ const path = require("path");
 const WebSocket = require("ws");
 
 const currentFilePath = path.resolve(__dirname);
-const { parameterHandler } = require("./utils");
+const { parameterHandler, clearPosition } = require("./utils");
 // eslint-disable-next-line no-shadow-restricted-names
 const [process_name, action, ws_address, account_id, trader_bot_args] =
   process.argv.splice(2);
@@ -48,6 +48,7 @@ pm2.connect(function (err) {
       pm2.stop(process_name, function (err) {
         if (!err) {
           stopStatusSync(ws_address, account_id);
+          clearPosition(trader_bot_args);
           pm2.stop(sync_status_bot_name, function (err) {
             if (!err) {
               stopStatusSync(ws_address, account_id);
