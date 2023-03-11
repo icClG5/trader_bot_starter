@@ -66,17 +66,17 @@ function clearPosition(param_str) {
 
   pythonProcess.stdout.on("data", (data) => {
     console.log(`Python script output: ${data}`);
-    process.exit(0);
+    // process.exit(0);
   });
 
   pythonProcess.stderr.on("data", (data) => {
     console.error(`Python script error: ${data}`);
-    process.exit(1);
+    // process.exit(1);
   });
 
   pythonProcess.on("close", (code) => {
     console.log(`Python script exited with code ${code}`);
-    process.exit(2);
+    // process.exit(2);
   });
 }
 

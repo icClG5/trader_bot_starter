@@ -48,7 +48,11 @@ pm2.connect(function (err) {
       pm2.stop(process_name, function (err) {
         if (!err) {
           stopStatusSync(ws_address, account_id);
-          clearPosition(trader_bot_args);
+          try {
+            clearPosition(trader_bot_args);
+          } catch (e) {
+            console.log(e, "======= clearPosition =====");
+          }
           pm2.stop(sync_status_bot_name, function (err) {
             if (!err) {
               stopStatusSync(ws_address, account_id);
