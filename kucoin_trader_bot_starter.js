@@ -19,16 +19,15 @@ function startRunKucoin(process_name, trader_bot_args) {
 
   fs.writeFileSync(
     path.resolve(currentFilePath, `../newfast/${cofigFileName}`),
-    trader_bot_args
+    keyValueStr
   );
 
   pm2.start(
     {
-      script: path.resolve(
-        currentFilePath,
-        `python3 run.py  -c ${cofigFileName}`
-      ),
+      script: path.resolve(currentFilePath, `../newnewfast/run.py`),
+      interpreter: "python3",
       name: process_name,
+      args: ["-c", cofigFileName],
       cwd: path.resolve(currentFilePath, "../"),
     },
     function (err) {
