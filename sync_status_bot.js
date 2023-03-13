@@ -37,26 +37,30 @@ function startStatusSync(wsAddress, pm2ProcessName, account_id) {
             const currentProcess = list.find(
               (item) => item.name === pm2ProcessName
             );
-            const {
-              pm2_env: { status, pm_uptime, created_at },
-            } = currentProcess;
-            ws.send(
-              JSON.stringify({
-                id: Number(account_id),
-                data: { status, pm_uptime, created_at, uptime: Date.now() },
-              }),
-              function (err) {
-                if (err) {
-                  console.error(
-                    `======= account_id:${account_id}  start sync fail ======`
-                  );
-                } else {
-                  console.log(
-                    `======= account_id:${account_id} start sync  ${status}  success !!! ======`
-                  );
+            try {
+              const {
+                pm2_env: { status, pm_uptime, created_at },
+              } = currentProcess;
+              ws.send(
+                JSON.stringify({
+                  id: Number(account_id),
+                  data: { status, pm_uptime, created_at, uptime: Date.now() },
+                }),
+                function (err) {
+                  if (err) {
+                    console.error(
+                      `======= account_id:${account_id}  start sync fail ======`
+                    );
+                  } else {
+                    console.log(
+                      `======= account_id:${account_id} start sync  ${status}  success !!! ======`
+                    );
+                  }
                 }
-              }
-            );
+              );
+            } catch (err) {
+              console.log(err, "==== ws.send error ====");
+            }
           });
         }
         uploadStatus();
