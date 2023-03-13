@@ -34,6 +34,7 @@ function startRunKucoin(process_name, trader_bot_args) {
       if (!err) {
         console.log("====== kucoin_trader_bot_starter start success  ======");
       } else {
+        console.log(err, "kucoin_trader_bot_starter err");
         console.log("====== kucoin_trader_bot_starter start fail  ======");
       }
     }
