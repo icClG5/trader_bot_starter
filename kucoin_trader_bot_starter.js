@@ -19,7 +19,7 @@ function startRunKucoin(process_name, trader_bot_args) {
 
   fs.writeFileSync(
     path.resolve(currentFilePath, `../newfast/${cofigFileName}`),
-    keyValueStr
+    trader_bot_args
   );
 
   pm2.start(
