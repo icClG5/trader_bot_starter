@@ -5,9 +5,16 @@ const WebSocket = require("ws");
 
 const currentFilePath = path.resolve(__dirname);
 const { parameterHandler, clearPosition } = require("./utils");
+const { startRunKucoin } = require("./kucoin_trader_bot_starter");
 // eslint-disable-next-line no-shadow-restricted-names
-const [process_name, action, ws_address, account_id, trader_bot_args] =
-  process.argv.splice(2);
+const [
+  process_name,
+  action,
+  ws_address,
+  account_id,
+  trader_bot_args,
+  isKucoin,
+] = process.argv.splice(2);
 
 let ws, interval;
 pm2.connect(function (err) {
@@ -35,11 +42,15 @@ pm2.connect(function (err) {
           pm2.stop(process_name);
           pm2.stop(sync_status_bot_name);
         }
-        pm2.start({
-          script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
-          name: process_name,
-          cwd: path.resolve(currentFilePath, "../"),
-        });
+        if (isKucoin) {
+          startRunKucoin(process_name, trader_bot_args);
+        } else {
+          pm2.start({
+            script: path.resolve(currentFilePath, `../HFT -c "${execParams}"`),
+            name: process_name,
+            cwd: path.resolve(currentFilePath, "../"),
+          });
+        }
         startSyncStatus(sync_status_bot_name);
       });
     } else if (action === "stop") {
