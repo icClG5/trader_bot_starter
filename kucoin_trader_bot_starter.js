@@ -12,7 +12,7 @@ function startRunKucoin(process_name, trader_bot_args) {
 
   const keyValueArr = Object.entries(obj);
   const keyValueStr = keyValueArr
-    .map(([key, value]) => `${key} = ${value}`)
+    .map(([key, value]) => `${key} = "${value}"`)
     .join("\n");
 
   const cofigFileName = `${process_name}_config.toml`;
