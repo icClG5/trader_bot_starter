@@ -25,7 +25,7 @@ function startRunKucoin(process_name, trader_bot_args) {
   pm2.start(
     {
       script: path.resolve(currentFilePath, `../newfast/run.py`),
-      interpreter: "python",
+      interpreter: "python3",
       name: process_name,
       args: ["-c", cofigFileName],
       cwd: path.resolve(currentFilePath, "../"),
