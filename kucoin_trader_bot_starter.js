@@ -28,7 +28,7 @@ function startRunKucoin(process_name, trader_bot_args) {
       interpreter: "python3",
       name: process_name,
       args: ["-c", cofigFileName],
-      cwd: path.resolve(currentFilePath, "../"),
+      cwd: path.resolve(currentFilePath, "../newfast"),
     },
     function (err) {
       if (!err) {
