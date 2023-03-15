@@ -122,7 +122,7 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
           }),
         })
         .then((res) => {
-          console.log(res, "======= axios response =======");
+          console.log(res.data, "======= axios response =======");
           if (res.data.error) {
             `======= account_id:${account_id} start sync  ${status}  error !!! =======`;
           } else {
