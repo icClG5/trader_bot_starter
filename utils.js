@@ -131,8 +131,9 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
             );
           }
         })
-        .catch(() => {
+        .catch((err) => {
           console.error(
+            err,
             `======= account_id:${account_id}  start sync fail =======`
           );
         })
