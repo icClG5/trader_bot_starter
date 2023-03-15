@@ -1,8 +1,7 @@
 const pm2 = require("pm2");
 const process = require("process");
 const path = require("path");
-const WebSocket = require("ws");
-
+const axios = require("axios");
 const currentFilePath = path.resolve(__dirname);
 const { parameterHandler, clearPosition } = require("./utils");
 const { startRunKucoin } = require("./kucoin_trader_bot_starter");
@@ -10,13 +9,12 @@ const { startRunKucoin } = require("./kucoin_trader_bot_starter");
 const [
   process_name,
   action,
-  ws_address,
+  updateStatusApi,
   account_id,
   trader_bot_args,
   isKucoin,
 ] = process.argv.splice(2);
 
-let ws, interval;
 pm2.connect(function (err) {
   if (err) {
     errorHandle(err);
@@ -55,10 +53,10 @@ pm2.connect(function (err) {
       });
     } else if (action === "stop") {
       console.log("====== enter stop ======");
-      // stopStatusSync(ws_address, account_id);
+      // stopStatusSync(updateStatusApi, account_id);
       pm2.stop(process_name, function (err) {
         if (!err) {
-          stopStatusSync(ws_address, account_id);
+          stopStatusSync(updateStatusApi, account_id);
           try {
             clearPosition(trader_bot_args);
           } catch (e) {
@@ -66,16 +64,16 @@ pm2.connect(function (err) {
           }
           pm2.stop(sync_status_bot_name, function (err) {
             if (!err) {
-              stopStatusSync(ws_address, account_id);
+              stopStatusSync(updateStatusApi, account_id);
               // process.exit(0);
             } else {
-              stopStatusSync(ws_address, account_id);
+              stopStatusSync(updateStatusApi, account_id);
               // process.exit(1);
               // errorHandle(err);
             }
           });
         } else {
-          stopStatusSync(ws_address, account_id);
+          stopStatusSync(updateStatusApi, account_id);
           console.log(`====== stop error: ${err} ======`);
           // errorHandle(err);
         }
@@ -90,7 +88,7 @@ function startSyncStatus(sync_status_bot_name) {
     {
       script: path.resolve(currentFilePath, "./sync_status_bot.js"),
       name: sync_status_bot_name,
-      args: [ws_address, process_name, account_id],
+      args: [updateStatusApi, process_name, account_id],
       cwd: path.resolve(currentFilePath),
     },
     function (err) {
@@ -102,16 +100,11 @@ function startSyncStatus(sync_status_bot_name) {
   );
 }
 
-function stopStatusSync(wsAddress, account_id) {
-  clearWs();
-  const ws = new WebSocket(wsAddress);
-  console.log("====== enter inner stop ======");
-  ws.on("open", function open() {
-    console.log(
-      `======= account_id:${account_id} stop sync status start ======`
-    );
-    ws.send(
-      JSON.stringify({
+function stopStatusSync(updateStatusApi, account_id) {
+  axios
+    .post(updateStatusApi, {
+      key: "pm2_status",
+      data: JSON.stringify({
         id: Number(account_id),
         data: {
           pm_uptime: Date.now(),
@@ -120,30 +113,16 @@ function stopStatusSync(wsAddress, account_id) {
           status: "stopped",
         },
       }),
-      (err) => {
-        if (!err) {
-          console.log(
-            `======= account_id:${account_id} stop sync status success ======`
-          );
-          ws.close();
-          clearWs();
-          process.exit(0);
-        }
-        process.exit(1);
-      }
-    );
-  });
-  ws.on("close", function () {
-    process.exit(0);
-    console.log("====== ws close ======");
-  });
-}
-
-function clearWs() {
-  clearInterval(interval);
-  if (ws && ws.close) {
-    ws.close();
-  }
+    })
+    .then(() => {
+      console.log(
+        `======= account_id:${account_id} stop sync status success ======`
+      );
+      process.exit(0);
+    })
+    .catch(() => {
+      process.exit(1);
+    });
 }
 
 function errorHandle(errMsg = "") {
