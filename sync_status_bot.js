@@ -26,31 +26,38 @@ function startStatusSync(updateStatusApi, pm2ProcessName, account_id) {
           const currentProcess = list.find(
             (item) => item.name === pm2ProcessName
           );
+          let status, pm_uptime, created_at;
           try {
-            const {
-              pm2_env: { status, pm_uptime, created_at },
-            } = currentProcess;
-            axios
-              .post(updateStatusApi, {
-                key: "pm2_status",
-                data: JSON.stringify({
-                  id: Number(account_id),
-                  data: { status, pm_uptime, created_at, uptime: Date.now() },
-                }),
-              })
-              .then(() => {
-                console.log(
-                  `======= account_id:${account_id} start sync  ${status}  success !!! =======`
-                );
-              })
-              .catch(() => {
-                console.error(
-                  `======= account_id:${account_id}  start sync fail =======`
-                );
-              });
+            if (currentProcess) {
+              status = currentProcess.pm2_env.status;
+              pm_uptime = currentProcess.pm2_env.pm_uptime;
+              created_at = currentProcess.pm2_env.created_at;
+            } else {
+              status = "online";
+              pm_uptime = Date.now();
+              created_at = Date.now();
+            }
           } catch (err) {
-            console.log(err, "==== ws.send error ====");
+            console.log(err, "==== get currentProcess error ====");
           }
+          axios
+            .post(updateStatusApi, {
+              key: "pm2_status",
+              data: JSON.stringify({
+                id: Number(account_id),
+                data: { status, pm_uptime, created_at, uptime: Date.now() },
+              }),
+            })
+            .then(() => {
+              console.log(
+                `======= account_id:${account_id} start sync  ${status}  success !!! =======`
+              );
+            })
+            .catch(() => {
+              console.error(
+                `======= account_id:${account_id}  start sync fail =======`
+              );
+            });
         });
       }
       uploadStatus();
