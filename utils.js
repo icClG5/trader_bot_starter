@@ -136,7 +136,7 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
             `======= account_id:${account_id}  start sync fail =======`
           );
         })
-        .finall(() => {
+        .finally(() => {
           if (cb) {
             cb();
           }
