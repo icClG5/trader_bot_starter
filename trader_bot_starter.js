@@ -96,8 +96,9 @@ function startSyncStatus(sync_status_bot_name) {
         uploadStatus(updateStatusApi, process_name, account_id, () => {
           process.exit(0);
         });
+      } else {
+        process.exit(1);
       }
-      process.exit(1);
     }
   );
 }
