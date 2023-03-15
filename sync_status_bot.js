@@ -48,7 +48,8 @@ function startStatusSync(updateStatusApi, pm2ProcessName, account_id) {
                 data: { status, pm_uptime, created_at, uptime: Date.now() },
               }),
             })
-            .then(() => {
+            .then((res) => {
+              console.log(res, "======= axios response =======");
               console.log(
                 `======= account_id:${account_id} start sync  ${status}  success !!! =======`
               );
