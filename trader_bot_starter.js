@@ -3,7 +3,7 @@ const process = require("process");
 const path = require("path");
 const axios = require("axios");
 const currentFilePath = path.resolve(__dirname);
-const { parameterHandler, clearPosition } = require("./utils");
+const { parameterHandler, clearPosition, uploadStatus } = require("./utils");
 const { startRunKucoin } = require("./kucoin_trader_bot_starter");
 // eslint-disable-next-line no-shadow-restricted-names
 const [
@@ -93,6 +93,7 @@ function startSyncStatus(sync_status_bot_name) {
     },
     function (err) {
       if (!err) {
+        uploadStatus(updateStatusApi, process_name, account_id);
         process.exit(0);
       }
       process.exit(1);
