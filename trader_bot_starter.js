@@ -39,6 +39,9 @@ pm2.connect(function (err) {
         if (listError) {
           errorHandle(`pm2.list error ${listError}`);
         }
+        if (list && list.length > 0) {
+          deleteAllStopProcess();
+        }
         const currentProcess = list.find((item) => item.name === process_name);
         console.log(currentProcess, "currentProcess");
         if (currentProcess) {
