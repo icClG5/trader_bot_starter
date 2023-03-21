@@ -155,8 +155,7 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
           );
         })
         .finally(() => {
-          console.error(
-            err,
+          console.log(
             `======= account_id:${account_id}  ${console.timeEnd()} time end =======`
           );
           if (cb) {
