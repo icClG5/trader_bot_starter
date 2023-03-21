@@ -124,7 +124,7 @@ function stopStatusSync(updateStatusApi, account_id) {
       process.exit(0);
     })
     .catch(() => {
-      process.exit(1);
+      process.exit(3);
     });
 }
 
