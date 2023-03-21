@@ -129,6 +129,7 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
       } catch (err) {
         console.log(err, "==== get currentProcess error ====");
       }
+      console.time();
       axios
         .post(updateStatusApi, {
           key: "pm2_status",
@@ -154,6 +155,10 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
           );
         })
         .finally(() => {
+          console.error(
+            err,
+            `======= account_id:${account_id}  ${console.timeEnd()} time end =======`
+          );
           if (cb) {
             cb();
           }
