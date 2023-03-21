@@ -55,23 +55,23 @@ pm2.connect(function (err) {
       console.log("====== enter stop ======");
       // stopStatusSync(updateStatusApi, account_id);
       pm2.stop(process_name, function (err) {
+        try {
+          clearPosition(trader_bot_args);
+        } catch (e) {
+          console.log(e, "======= clearPosition =====");
+        }
+        pm2.stop(sync_status_bot_name, function (err) {
+          if (!err) {
+            stopStatusSync(updateStatusApi, account_id);
+            // process.exit(0);
+          } else {
+            stopStatusSync(updateStatusApi, account_id);
+            // process.exit(1);
+            // errorHandle(err);
+          }
+        });
         if (!err) {
           stopStatusSync(updateStatusApi, account_id);
-          try {
-            clearPosition(trader_bot_args);
-          } catch (e) {
-            console.log(e, "======= clearPosition =====");
-          }
-          pm2.stop(sync_status_bot_name, function (err) {
-            if (!err) {
-              stopStatusSync(updateStatusApi, account_id);
-              // process.exit(0);
-            } else {
-              stopStatusSync(updateStatusApi, account_id);
-              // process.exit(1);
-              // errorHandle(err);
-            }
-          });
         } else {
           stopStatusSync(updateStatusApi, account_id);
           console.log(`====== stop error: ${err} ======`);
