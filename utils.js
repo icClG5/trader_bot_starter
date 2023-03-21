@@ -158,6 +158,9 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
             cb();
           }
         });
+      if (cb) {
+        cb();
+      }
     });
   });
 }
