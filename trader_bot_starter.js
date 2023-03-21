@@ -129,11 +129,9 @@ function stopStatusSync(updateStatusApi, account_id) {
       console.log(
         `======= account_id:${account_id} stop sync status success ======`
       );
-      deleteAllStopProcess();
       process.exit(0);
     })
     .catch(() => {
-      deleteAllStopProcess();
       process.exit(3);
     });
 }
