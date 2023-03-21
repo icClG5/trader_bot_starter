@@ -6,6 +6,22 @@ const pm2 = require("pm2");
 const process = require("process");
 const axios = require("axios");
 
+const { exec } = require("child_process");
+
+function deleteAllStopProcess() {
+  exec(
+    "pm2 list | grep 'stopped' | awk '{print $2}' | xargs | xargs pm2 delete",
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error(`exec error: ${err}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.error(`stderr: ${stderr}`);
+    }
+  );
+}
+
 function errorHandle(errMsg = "") {
   console.error(errMsg);
   process.exit(2);
@@ -150,4 +166,5 @@ module.exports = {
   parameterHandler,
   clearPosition,
   uploadStatus,
+  deleteAllStopProcess,
 };

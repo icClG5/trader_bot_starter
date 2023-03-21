@@ -3,7 +3,12 @@ const process = require("process");
 const path = require("path");
 const axios = require("axios");
 const currentFilePath = path.resolve(__dirname);
-const { parameterHandler, clearPosition, uploadStatus } = require("./utils");
+const {
+  parameterHandler,
+  clearPosition,
+  uploadStatus,
+  deleteAllStopProcess,
+} = require("./utils");
 const { startRunKucoin } = require("./kucoin_trader_bot_starter");
 // eslint-disable-next-line no-shadow-restricted-names
 const [
@@ -121,9 +126,11 @@ function stopStatusSync(updateStatusApi, account_id) {
       console.log(
         `======= account_id:${account_id} stop sync status success ======`
       );
+      deleteAllStopProcess();
       process.exit(0);
     })
     .catch(() => {
+      deleteAllStopProcess();
       process.exit(3);
     });
 }
