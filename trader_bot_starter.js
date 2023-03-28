@@ -43,7 +43,6 @@ pm2.connect(function (err) {
           deleteAllStopProcess();
         }
         const currentProcess = list.find((item) => item.name === process_name);
-        console.log(currentProcess, "currentProcess");
         if (currentProcess) {
           pm2.stop(process_name);
           pm2.stop(sync_status_bot_name);
@@ -62,13 +61,13 @@ pm2.connect(function (err) {
     } else if (action === "stop") {
       console.log("====== enter stop ======");
       // stopStatusSync(updateStatusApi, account_id);
-      pm2.stop(process_name, function (err) {
+      pm2.delete(process_name, function (err) {
         try {
           clearPosition(trader_bot_args);
         } catch (e) {
           console.log(e, "======= clearPosition =====");
         }
-        pm2.stop(sync_status_bot_name, function (err) {
+        pm2.delete(sync_status_bot_name, function (err) {
           if (!err) {
             stopStatusSync(updateStatusApi, account_id);
             // process.exit(0);

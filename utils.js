@@ -129,7 +129,6 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
       } catch (err) {
         console.log(err, "==== get currentProcess error ====");
       }
-      console.time();
       axios
         .post(updateStatusApi, {
           key: "pm2_status",
@@ -141,7 +140,9 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
         .then((res) => {
           console.log(res.data, "======= axios response =======");
           if (res.data.error) {
-            `======= account_id:${account_id} start sync  ${status}  error !!! =======`;
+            console.log(
+              `======= account_id:${account_id} start sync  ${status}  error !!! =======`
+            );
           } else {
             console.log(
               `======= account_id:${account_id} start sync  ${status}  success !!! =======`
@@ -155,16 +156,10 @@ function uploadStatus(updateStatusApi, pm2ProcessName, account_id, cb) {
           );
         })
         .finally(() => {
-          console.log(
-            `======= account_id:${account_id}  ${console.timeEnd()} time end =======`
-          );
           if (cb) {
             cb();
           }
         });
-      if (cb) {
-        cb();
-      }
     });
   });
 }
