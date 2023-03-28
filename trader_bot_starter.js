@@ -78,9 +78,9 @@ pm2.connect(function (err) {
           }
         });
         if (!err) {
-          stopStatusSync(updateStatusApi, account_id);
+          // stopStatusSync(updateStatusApi, account_id);
         } else {
-          stopStatusSync(updateStatusApi, account_id);
+          // stopStatusSync(updateStatusApi, account_id);
           console.log(`====== stop error: ${err} ======`);
           // errorHandle(err);
         }
